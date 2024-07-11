@@ -53,6 +53,27 @@ const getUploadedImage = (e) => {
             .scrollIntoView({ behavior: "smooth" });
     }, 300);
 };
+
+const createPost = () => {
+    // Clear the errors
+    error.value.text = null;
+    error.value.file = null;
+
+    // Send the 'form' object via POST request to '/posts' (Intertia's router object)
+    router.post("/posts", form, {
+        forceFormData: true, // as it's an image upload
+        preserveScroll: true,
+        onError: (errors) => {
+            // Error? Assign it!
+            errors && errors.text ? (error.value.text = errors.text) : "";
+            errors && errors.file ? (error.value.file = errors.file) : "";
+        },
+        onSuccess: () => {
+            // Success? Close the overlay!
+            closeOverlay();
+        },
+    });
+};
 </script>
 
 <template>
