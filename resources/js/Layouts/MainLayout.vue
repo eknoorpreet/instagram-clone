@@ -12,6 +12,8 @@ import AccountOutline from "vue-material-design-icons/AccountOutline.vue";
 import ChevronLeft from "vue-material-design-icons/ChevronLeft.vue";
 import AccountPlusOutline from "vue-material-design-icons/AccountPlusOutline.vue";
 
+import MenuItem from "@/Components/MenuItem.vue";
+
 let showCreatePost = ref(false);
 </script>
 
@@ -80,9 +82,23 @@ let showCreatePost = ref(false);
 
             <div class="px-3">
                 <Link href="/">
-                    <!-- <MenuItem iconString="Home" class="mb-4" /> -->
+                    <MenuItem iconString="Home" class="mb-4" />
                 </Link>
+                <MenuItem iconString="Search" class="mb-4" />
+                <MenuItem iconString="Explore" class="mb-4" />
+                <MenuItem iconString="Messages" class="mb-4" />
+                <MenuItem iconString="Notifications" class="mb-4" />
+                <MenuItem iconString="Profile" class="mb-4" />
             </div>
+
+            <!-- <MenuItem
+                    @click="showCreatePost = true"
+                    iconString="Create"
+                    class="mb-4"
+                /> -->
+            <Link href="/" class="absolute bottom-0 px-3 w-full">
+                <MenuItem iconString="Log out" class="mb-4" />
+            </Link>
         </div>
     </div>
 </template>
