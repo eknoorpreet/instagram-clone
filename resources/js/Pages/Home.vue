@@ -5,6 +5,6 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 <template>
     <Head title="Home" />
     <MainLayout>
-        <!-- <div class="bg-green-500">Home</div> -->
+        <div class="bg-green-500">Home</div>
     </MainLayout>
 </template>
