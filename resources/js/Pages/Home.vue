@@ -99,8 +99,19 @@ onMounted(() => {
                     />
                 </div>
 
-                <LikesSection :post="post" @like="updateLike($event)" />
+                <LikesSection />
+
+                <div class="text-black font-extrabold py-1">77 likes</div>
+                <div>
+                    <span class="text-black font-extrabold">NAME</span>
+                    TEXT
+                </div>
+                <button class="text-gray-500 font-extrabold py-1">
+                    View all 19 comments
+                </button>
             </div>
+
+            <div class="pb-20"></div>
         </div>
     </MainLayout>
 </template>
