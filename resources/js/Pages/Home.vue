@@ -2,6 +2,7 @@
 import { ref, onMounted, toRefs } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
+import LikesSection from "@/Components/LikesSection.vue";
 
 // Carousel imports
 import "vue3-carousel/dist/carousel.css";
@@ -97,6 +98,8 @@ onMounted(() => {
                         src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
                     />
                 </div>
+
+                <LikesSection :post="post" @like="updateLike($event)" />
             </div>
         </div>
     </MainLayout>
