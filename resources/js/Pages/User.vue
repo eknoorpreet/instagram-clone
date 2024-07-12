@@ -3,6 +3,7 @@ import { reactive, toRefs } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 
 import MainLayout from "@/Layouts/MainLayout.vue";
+import ContentOverlay from "@/Components/ContentOverlay.vue";
 
 import Cog from "vue-material-design-icons/Cog.vue";
 import Grid from "vue-material-design-icons/Grid.vue";
@@ -186,6 +187,12 @@ const getUploadedImage = (e) => {
                     </div>
                 </div>
             </div>
+
+            <div class="grid md:gap-4 gap-1 grid-cols-3 relative">
+                <ContentOverlay />
+            </div>
+
+            <div class="pb-20"></div>
         </div>
     </MainLayout>
 </template>
