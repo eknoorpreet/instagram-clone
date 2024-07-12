@@ -19,7 +19,7 @@ const emit = defineEmits(["like"]);
     <div class="flex z-20 items-center justify-between">
         <div class="flex items-center">
             <button @click="$emit('like', { post, user })" class="-mt-[14px]">
-                PLACEHOLDER
+                <HeartOutline class="pl-3 cursor-pointer" />
             </button>
             <CommentOutline class="pl-3 pt-[10px]" :size="30" />
             <SendOutline class="pl-3 pt-[10px]" :size="30" />
