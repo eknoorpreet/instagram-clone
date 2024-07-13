@@ -98,6 +98,7 @@ const createPost = () => {
                 />
                 <div class="text-lg font-extrabold"></div>
                 <button
+                    @click="($event) => createPost()"
                     class="text-lg text-blue-500 hover:text-gray-900 font-extrabold"
                 >
                     Share
