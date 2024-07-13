@@ -23,6 +23,83 @@ onMounted(() => {
         windowWidth.value = window.innerWidth;
     });
 });
+
+const addComment = (object) => {
+    router.post(
+        "/comments",
+        {
+            post_id: object.post.id,
+            user_id: object.user.id,
+            comment: object.comment,
+        },
+        {
+            onFinish: () => updatedPost(object),
+        }
+    );
+};
+
+const deleteFunc = (object) => {
+    let url = "";
+
+    // Is it a post or a comment?
+    if (object.deleteType === "Post") {
+        url = "/posts/" + object.id;
+    } else {
+        url = "/comments/" + object.id;
+    }
+
+    router.delete(url, {
+        onFinish: () => updatedPost(object),
+    });
+
+    // If it's a post to be deleted
+    if (object.deleteType === "Post") {
+        // Close the overlay
+        openOverlay.value = false;
+    }
+};
+
+const updateLike = (object) => {
+    let deleteLike = false;
+    let id = null;
+
+    for (let i = 0; i < object.post.likes.length; i++) {
+        const like = object.post.likes[i];
+        if (
+            like.user_id === object.user.id &&
+            like.post_id === object.post.id
+        ) {
+            deleteLike = true;
+            id = like.id;
+        }
+    }
+
+    if (deleteLike) {
+        router.delete("/likes/" + id, {
+            onFinish: () => updatedPost(object),
+        });
+    } else {
+        router.post(
+            "/likes",
+            {
+                post_id: object.post.id,
+            },
+            {
+                onFinish: () => updatedPost(object),
+            }
+        );
+    }
+};
+
+const updatedPost = (object) => {
+    for (let i = 0; i < posts.value.data.length; i++) {
+        const post = posts.value.data[i];
+        if (post.id === object.post.id) {
+            // Reset the current post value to that post
+            currentPost.value = post;
+        }
+    }
+};
 </script>
 
 <template>
@@ -38,9 +115,9 @@ onMounted(() => {
                 :transition="500"
                 snapAlign="start"
             >
-                <Slide v-for="slide in 10" :key="slide">
+                <Slide v-for="slide in allUsers" :key="slide">
                     <Link
-                        href="/"
+                        :href="route('users.show', { id: slide.id })"
                         class="relative mx-auto text-center mt-4 px-2 cursor-pointer"
                     >
                         <div
@@ -52,12 +129,12 @@ onMounted(() => {
                         </div>
                         <img
                             class="rounded-full w-[56px] h-[56px] -mt-[1px]"
-                            src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
+                            :src="slide.file"
                         />
                         <div
                             class="text-xs mt-2 w-[60px] truncate text-ellipsis overflow-hidden"
                         >
-                            NAME
+                            {{ slide.name }}
                         </div>
                     </Link>
                 </Slide>
@@ -67,16 +144,24 @@ onMounted(() => {
                 </template>
             </Carousel>
 
-            <div id="Posts" class="px-4 max-w-[600px] mx-auto mt-10">
+            <div
+                id="Posts"
+                class="px-4 max-w-[600px] mx-auto mt-10"
+                v-for="post in posts.data"
+                :key="post"
+            >
                 <div class="flex items-center justify-between py-2">
                     <div class="flex items-center">
-                        <Link href="/" class="flex items-center">
+                        <Link
+                            :href="route('users.show', { id: post.user.id })"
+                            class="flex items-center"
+                        >
                             <img
                                 class="rounded-full w-[38px] h-[38px]"
-                                src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
+                                :src="post.user.file"
                             />
                             <div class="ml-4 font-extrabold text[15px]">
-                                NAME
+                                {{ post.user.name }}
                             </div>
                         </Link>
                         <div
@@ -85,7 +170,7 @@ onMounted(() => {
                             <span class="-mt-5 ml-2 mr-[5px] text-[35px]"
                                 >.</span
                             >
-                            <div>DATE</div>
+                            <div>{{ post.created_at }}</div>
                         </div>
                     </div>
                     <DotsHorizontal class="cursor-pointer" :size="27" />
@@ -94,24 +179,33 @@ onMounted(() => {
                 <div
                     class="bg-black rounded-lg w-full min-h-[400px] flex items-center"
                 >
-                    <img
-                        class="mx-auto w-full"
-                        src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
-                    />
+                    <img class="mx-auto w-full" :src="post.file" />
                 </div>
 
-                <LikesSection />
+                <LikesSection
+                    :post="post"
+                    @like="($event) => updateLike($event)"
+                />
 
-                <div class="text-black font-extrabold py-1">77 likes</div>
+                <div class="text-black font-extrabold py-1">
+                    {{ post.likes.length }} likes
+                </div>
                 <div>
-                    <span class="text-black font-extrabold">NAME</span>
-                    TEXT
+                    <span class="text-black font-extrabold">{{
+                        post.user.name
+                    }}</span>
+                    {{ post.text }}
                 </div>
                 <button
-                    @click="($event) => (openOverlay = true)"
+                    @click="
+                        () => {
+                            currentPost = post;
+                            openOverlay = true;
+                        }
+                    "
                     class="text-gray-500 font-extrabold py-1"
                 >
-                    View all 19 comments
+                    View all {{ post.comments.length }} comments
                 </button>
             </div>
 
@@ -122,6 +216,9 @@ onMounted(() => {
     <ShowPostOverlay
         v-if="openOverlay"
         :post="currentPost"
+        @addComment="($event) => addComment($event)"
+        @updateLike="($event) => updateLike($event)"
+        @deleteSelected="($event) => deleteFunc($event)"
         @closeOverlay="($event) => (openOverlay = false)"
     />
 </template>
