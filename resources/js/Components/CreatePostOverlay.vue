@@ -8,7 +8,7 @@ import MapMarkerOutline from "vue-material-design-icons/MapMarkerOutline.vue";
 import ChevronDown from "vue-material-design-icons/ChevronDown.vue";
 
 // Get the logged in user
-// const user = usePage().props.auth.user;
+const user = usePage().props.auth.user;
 
 // Define our emits
 const emit = defineEmits(["close"]);
@@ -152,10 +152,10 @@ const createPost = () => {
                         <div class="flex items-center">
                             <img
                                 class="rounded-full w-[38px] h-[38px]"
-                                src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
+                                :src="user.file"
                             />
                             <div class="ml-4 font-extrabold text-[15px]">
-                                NAME HERE
+                                {{ user.name }}
                             </div>
                         </div>
                     </div>

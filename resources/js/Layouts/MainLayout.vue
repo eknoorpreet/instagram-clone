@@ -100,7 +100,6 @@ let showCreatePost = ref(false);
                     :href="
                         route('users.show', { id: $page.props.auth.user.id })
                     "
-                    method="post"
                 >
                     <MenuItem iconString="Profile" class="mb-4" />
                 </Link>
