@@ -62,7 +62,9 @@ let showCreatePost = ref(false);
             <Link href="/" class="px-4">
                 <ChevronLeft :size="30" class="cursor-pointer"
             /></Link>
-            <div class="font-extrabold text-lg">NAME HERE</div>
+            <div class="font-extrabold text-lg">
+                {{ $page.props.auth.user.name }}
+            </div>
             <AccountPlusOutline :size="30" class="cursor-pointer px-4" />
         </div>
 
@@ -94,12 +96,22 @@ let showCreatePost = ref(false);
                     iconString="Create"
                     class="mb-4"
                 />
-                <Link href="/">
+                <Link
+                    :href="
+                        route('users.show', { id: $page.props.auth.user.id })
+                    "
+                    method="post"
+                >
                     <MenuItem iconString="Profile" class="mb-4" />
                 </Link>
             </div>
 
-            <Link href="/" class="absolute bottom-0 px-3 w-full">
+            <Link
+                :href="route('logout')"
+                as="button"
+                method="post"
+                class="absolute bottom-0 px-3 w-full"
+            >
                 <MenuItem iconString="Log out" class="mb-4" />
             </Link>
         </div>
@@ -122,20 +134,22 @@ let showCreatePost = ref(false);
                 class="lg:w-4/12 lg:block hidden text-black mt-10"
             >
                 <Link
-                    href="/"
+                    :href="
+                        route('users.show', { id: $page.props.auth.user.id })
+                    "
                     class="flex items-center justify-between max-w-[300px]"
                 >
                     <div class="flex items-center">
                         <img
-                            src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
+                            :src="$page.props.auth.user.file"
                             class="rounded-full z-10 w-[58px] h-[58px]"
                         />
                         <div class="pl-4">
                             <div class="text-black font-extrabold">
-                                NAME HERE
+                                {{ $page.props.auth.user.name }}
                             </div>
                             <div class="text-gray-500 font-extrabold text-sm">
-                                NAME HERE
+                                {{ $page.props.auth.user.name }}
                             </div>
                         </div>
                     </div>
@@ -158,30 +172,37 @@ let showCreatePost = ref(false);
                         See All
                     </button>
                 </div>
-                <Link
-                    href="/"
-                    class="flex items-center justify-between max-w-[300px] pb-2"
+                <div
+                    v-for="randomUser in $page.props.randomUsers"
+                    :key="randomUser"
                 >
-                    <div class="flex items-center">
-                        <img
-                            src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
-                            class="rounded-full z-10 w-[37px] h-[37px]"
-                        />
-                        <div class="pl-4">
-                            <div class="text-black font-extrabold">
-                                NAME HERE
-                            </div>
-                            <div class="text-gray-500 font-extrabold text-sm">
-                                NAME HERE
+                    <Link
+                        :href="route('users.show', { id: randomUser.id })"
+                        class="flex items-center justify-between max-w-[300px] pb-2"
+                    >
+                        <div class="flex items-center">
+                            <img
+                                :src="randomUser.file"
+                                class="rounded-full z-10 w-[37px] h-[37px]"
+                            />
+                            <div class="pl-4">
+                                <div class="text-black font-extrabold">
+                                    {{ randomUser.name }}
+                                </div>
+                                <div
+                                    class="text-gray-500 font-extrabold text-sm"
+                                >
+                                    Suggested for you
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <button
-                        class="text-blue-500 over:text-gray-900 text-xs font-extrabold"
-                    >
-                        Follow
-                    </button>
-                </Link>
+                        <button
+                            class="text-blue-500 over:text-gray-900 text-xs font-extrabold"
+                        >
+                            Follow
+                        </button>
+                    </Link>
+                </div>
                 <div class="max-w-[300px] mt-5">
                     <div class="text-sm text-gray-400">
                         About Help Press API Jobs Privacy Terms Locations
