@@ -243,10 +243,10 @@ let showCreatePost = ref(false);
                 :size="33"
                 class="cursor-pointer"
             />
-            <Link href="/">
+            <Link :href="route('users.show', { id: $page.props.auth.user.id })">
                 <img
                     class="rounded-full w-[30px] cursor-pointer"
-                    src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
+                    :src="$page.props.auth.user.file"
                 />
             </Link>
         </div>

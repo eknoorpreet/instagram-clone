@@ -8,6 +8,8 @@ defineEmits(["selectedPost"]);
 const props = defineProps(["postByUser"]);
 const { postByUser } = toRefs(props);
 
+console.log(postByUser);
+
 // Track hover state
 let isHover = ref(false);
 </script>
@@ -27,18 +29,18 @@ let isHover = ref(false);
             <div class="flex items-center justify-around w-[50%]">
                 <div class="flex items-center justify-center">
                     <Heart fillColor="#FFFFFF" :size="30" />
-                    <div class="pl-1">11</div>
+                    <div class="pl-1">{{ postByUser.likes.length }}</div>
                 </div>
                 <div class="flex items-center justify-center">
                     <Comment fillColor="#FFFFFF" :size="30" />
-                    <div class="pl-1">13</div>
+                    <div class="pl-1">{{ postByUser.comments.length }}</div>
                 </div>
             </div>
         </div>
 
         <img
             class="aspect-square mx-auto z-0 object-cover cursor-pointer"
-            src="https://i.pinimg.com/originals/8b/3e/55/8b3e5506a8f46851b336ef24224adcb0.jpg"
+            :src="postByUser.file"
         />
     </div>
 </template>
